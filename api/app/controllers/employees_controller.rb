@@ -1,5 +1,9 @@
 class EmployeesController < ApplicationController
   def index
+    render json: Employee.all
+  end
+
+  def show
     if employee = Employee.find_by(id: employee_id)
       render json: employee
     else
