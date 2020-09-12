@@ -10,11 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_12_092610) do
+ActiveRecord::Schema.define(version: 2020_09_12_101941) do
 
   create_table "employees", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "performance_reviews", force: :cascade do |t|
+    t.integer "employee_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["employee_id"], name: "index_performance_reviews_on_employee_id"
+  end
+
+  add_foreign_key "performance_reviews", "employees"
 end
