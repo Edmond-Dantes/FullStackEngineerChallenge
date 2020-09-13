@@ -8,6 +8,11 @@ class EmployeesController < ApplicationController
     render json: Employee.all, include: '**'
   end
 
+  def create
+    new_employee = Employee.create
+    render json: new_employee, include: '**'
+  end
+
   def show
     if employee = Employee.find_by(id: employee_id)
       render json: employee, include: '**'
