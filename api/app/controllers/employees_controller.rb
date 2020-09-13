@@ -23,7 +23,7 @@ class EmployeesController < ApplicationController
 
   def delete
     if employee = Employee.find_by(id: employee_id)
-      p employee.destroy
+      employee.destroy
       render json: {}
     else
       render json: nil, status: :not_found
