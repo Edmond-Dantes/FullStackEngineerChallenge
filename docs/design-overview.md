@@ -5,7 +5,6 @@ This is a web application that allows employees to submit feedback toward each o
 - employees
 - reviews
 - feedback
-- feedback assignments
 
 ### Pages
 #### Admin View
