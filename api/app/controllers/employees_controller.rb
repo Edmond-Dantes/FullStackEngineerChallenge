@@ -21,6 +21,15 @@ class EmployeesController < ApplicationController
     end
   end
 
+  def delete
+    if employee = Employee.find_by(id: employee_id)
+      p employee.destroy
+      render json: {}
+    else
+      render json: nil, status: :not_found
+    end
+  end
+
   private
 
   def employee_params
