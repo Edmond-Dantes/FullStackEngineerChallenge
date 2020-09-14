@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useParams, useHistory } from "react-router-dom";
 import camelcaseKeys from "camelcase-keys";
 
-const API_DOMAIN = "http://localhost:5000";
+const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
 
 interface IPerformanceReviewFeedback {
   id: number;
@@ -20,10 +20,12 @@ interface IEmployee {
 }
 
 export function AdminEmployeeDetail() {
+  const cancelled = useRef(false)
   const { employeeId } = useParams();
-  console.log(employeeId);
+  const history = useHistory();
   const [employee, setEmployee] = useState<IEmployee | null>(null);
   useEffect(() => {
+    cancelled.current = false;
     const url = `${API_DOMAIN}/employees/${employeeId}`;
     fetch(url)
       .then((response) => {
@@ -32,12 +34,34 @@ export function AdminEmployeeDetail() {
       })
       .then((data) => {
         const employee: IEmployee = camelcaseKeys(data);
-        setEmployee(employee);
+        if (!cancelled.current) setEmployee(employee);
       })
       .catch((e) => console.log(e));
 
-    return () => {};
+    return () => {
+      cancelled.current = true;
+    }
   }, [employeeId]);
+
+  const handleDelete = () => {
+    const url = `${API_DOMAIN}/employees/${employeeId}`;
+    const options: RequestInit = {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    fetch(url, options)
+      .then((response) => {
+        if (response.status >= 400) throw new Error("error");
+        return response.json();
+      })
+      .then(() => {
+        if (!cancelled.current) history.push("/admin")
+      })
+      .catch((e) => console.log(e));
+  };
 
   if (!employee) return <div>loading...</div>;
 
@@ -47,6 +71,7 @@ export function AdminEmployeeDetail() {
     <div>
       <Link to="/admin">back</Link>
       <h1>Employee #{employeeId}</h1>
+      <button onClick={handleDelete}>Delete</button>
       <h2>Performance Reviews</h2>
       <button onClick={() => {}}>Add</button>
       <ul>

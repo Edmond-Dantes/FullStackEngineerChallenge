@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import camelcaseKeys from "camelcase-keys";
 
-const API_DOMAIN = "http://localhost:5000";
+const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
 
 interface IEmployee {
   id: number;
 }
 
 export function AdminHome() {
+  const cancelled = useRef(false);
   const [employees, setEmployees] = useState<IEmployee[] | null>(null);
   useEffect(() => {
+    cancelled.current = false;
     const url = `${API_DOMAIN}/employees/`;
     fetch(url)
       .then((response) => {
@@ -18,43 +20,48 @@ export function AdminHome() {
         return response.json();
       })
       .then((data) => {
-        const employees = camelcaseKeys(data)
-        setEmployees(employees);
+        const employees = camelcaseKeys(data);
+        if (!cancelled.current) setEmployees(employees);
       })
       .catch((e) => console.log(e));
 
-    return () => {};
+    return () => {
+      cancelled.current = true;
+    };
   }, []);
 
   if (!employees) return <div>loading...</div>;
 
+  const handleAdd = () => {
+    const url = `${API_DOMAIN}/employees/`;
+    const options: RequestInit = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    fetch(url, options)
+      .then((response) => {
+        if (response.status >= 400) throw new Error("error");
+        return response.json();
+      })
+      .then((data) => {
+        const employee = camelcaseKeys(data);
+        if (!cancelled.current) setEmployees([...employees, employee]);
+      })
+      .catch((e) => console.log(e));
+  };
+
   return (
     <div>
       <h1>Employees</h1>
-      <button onClick={() => {
-        const url = `${API_DOMAIN}/employees/`;
-        const options: RequestInit = {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        }
-        fetch(url, options)
-          .then((response) => {
-            console.log(response)
-            if (response.status >= 400) throw new Error("error");
-            return response.json();
-          })
-          .then((data) => {
-            const employee = camelcaseKeys(data)
-            setEmployees([...employees, employee]);
-          })
-          .catch((e) => console.log(e));
-      }}>Add</button>
+      <button onClick={handleAdd}>Add</button>
       <ul>
         {employees.map(({ id }) => (
-          <li key={id}><Link to={`/admin/employees/${id}`}>{id}</Link></li>
+          <li key={id}>
+            <Link to={`/admin/employees/${id}`}>{id}</Link>{" "}
+          </li>
         ))}
       </ul>
     </div>
