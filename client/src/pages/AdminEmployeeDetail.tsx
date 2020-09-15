@@ -20,7 +20,7 @@ interface IEmployee {
 }
 
 export function AdminEmployeeDetail() {
-  const cancelled = useRef(false)
+  const cancelled = useRef(false);
   const { employeeId } = useParams();
   const history = useHistory();
   const [employee, setEmployee] = useState<IEmployee | null>(null);
@@ -34,13 +34,15 @@ export function AdminEmployeeDetail() {
       })
       .then((data) => {
         const employee: IEmployee = camelcaseKeys(data);
-        if (!cancelled.current) setEmployee(employee);
+        if (!cancelled.current) {
+          setEmployee(employee);
+        }
       })
       .catch((e) => console.log(e));
 
     return () => {
       cancelled.current = true;
-    }
+    };
   }, [employeeId]);
 
   const handleDelete = () => {
@@ -58,7 +60,36 @@ export function AdminEmployeeDetail() {
         return response.json();
       })
       .then(() => {
-        if (!cancelled.current) history.push("/admin")
+        if (!cancelled.current) history.push("/admin");
+      })
+      .catch((e) => console.log(e));
+  };
+
+  const handleAdd = () => {
+    const url = `${API_DOMAIN}/employees/${employeeId}/performance_reviews`;
+    const options: RequestInit = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    fetch(url, options)
+      .then((response) => {
+        if (response.status >= 400) throw new Error("error");
+        return response.json();
+      })
+      .then((data: IPerformanceReview) => {
+        const performanceReview: IPerformanceReview = camelcaseKeys(data);
+        const currentPerformanceReviews = employee?.performanceReviews || [];
+        if (!cancelled.current)
+          setEmployee({
+            id: employeeId,
+            performanceReviews: [
+              ...currentPerformanceReviews,
+              performanceReview,
+            ],
+          });
       })
       .catch((e) => console.log(e));
   };
@@ -73,14 +104,17 @@ export function AdminEmployeeDetail() {
       <h1>Employee #{employeeId}</h1>
       <button onClick={handleDelete}>Delete</button>
       <h2>Performance Reviews</h2>
-      <button onClick={() => {}}>Add</button>
+      <button onClick={handleAdd}>Add</button>
       <ul>
         {performanceReviews.map(
-          ({ id: reviewId, performanceReviewFeedbacks }) => (
-            <li>
-              {reviewId} {performanceReviewFeedbacks.length.toString()}
-            </li>
-          )
+          ({ id: reviewId, performanceReviewFeedbacks }) => {
+            const feedbackCount = performanceReviewFeedbacks?.length || 0
+            return (
+              <li key={reviewId}>
+                {reviewId} - {feedbackCount}
+              </li>
+            );
+          }
         )}
       </ul>
     </div>

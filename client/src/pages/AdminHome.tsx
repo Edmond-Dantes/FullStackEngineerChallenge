@@ -30,8 +30,6 @@ export function AdminHome() {
     };
   }, []);
 
-  if (!employees) return <div>loading...</div>;
-
   const handleAdd = () => {
     const url = `${API_DOMAIN}/employees/`;
     const options: RequestInit = {
@@ -48,10 +46,15 @@ export function AdminHome() {
       })
       .then((data) => {
         const employee = camelcaseKeys(data);
-        if (!cancelled.current) setEmployees([...employees, employee]);
+        if (!cancelled.current) {
+          const currentEmployees = employees || []
+          setEmployees([...currentEmployees, employee]);
+        }
       })
       .catch((e) => console.log(e));
   };
+
+  if (!employees) return <div>loading...</div>;
 
   return (
     <div>
