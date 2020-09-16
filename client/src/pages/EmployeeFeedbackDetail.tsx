@@ -73,6 +73,7 @@ export function EmployeeFeedbackDetail() {
     return (
       <div>
         <h1>Feedback for employee #{revieweeId}</h1>
+        <h3>- Pending</h3>
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -96,6 +97,7 @@ export function EmployeeFeedbackDetail() {
   return (
     <div>
       <h1>Feedback for employee #{feedback.revieweeId}</h1>
+      <h3>- Completed</h3>
       <p>{content}</p>
     </div>
   );
