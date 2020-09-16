@@ -6,14 +6,18 @@ class PerformanceReviewFeedbacksController < ApplicationController
 
       performance_review_feedback =
         PerformanceReviewFeedback
-          .create(
+          .new(
             performance_review_id: performance_review.id,
             employee_id: reviewer_id
           )
 
-      render json: performance_review_feedback, include: '**'
+      if performance_review_feedback.save
+        render json: performance_review_feedback, include: '**'
+      else
+        render json: nil, status: :bad_request
+      end
     else
-      render json: nil, status: :bad_request
+      render json: nil, status: :not_found
     end
   end
 

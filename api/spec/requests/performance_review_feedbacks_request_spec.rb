@@ -15,6 +15,15 @@ RSpec.describe "PerformanceReviewFeedbacks", type: :request do
       post "/employees/1/performance_reviews/1/performance_review_feedbacks", params: { reviewer_id: 2 }
       expect(response.body).to be == expected
     end
+
+    it "returns bad request status for non-existent reviewer" do
+      employee1 = Employee.create
+      employee2 = Employee.create
+      performance_review = PerformanceReview.create(employee_id: employee1.id)
+
+      post "/employees/1/performance_reviews/1/performance_review_feedbacks", params: { reviewer_id: 999 }
+      expect(response.status).to be == 400
+    end
   end
 
   describe "PATCH /employees/:employee_id/performance_reviews/:performance_reviews_id/performance_review_feedbacks/:performance_review_feedback_id" do
@@ -36,6 +45,21 @@ RSpec.describe "PerformanceReviewFeedbacks", type: :request do
 
       patch "/employees/1/performance_reviews/1/performance_review_feedbacks/1", params: { content: "test_content" }
       expect(response.body).to be == expected
+    end
+
+    it "returns not found status for non-existent performance review feedback record" do
+      employee1 = Employee.create
+      employee2 = Employee.create
+      performance_review = PerformanceReview.create(employee_id: employee1.id)
+      performance_review_feedback =
+        PerformanceReviewFeedback
+          .create(
+            employee_id: employee2.id,
+            performance_review_id: performance_review.id
+          )
+
+      patch "/employees/1/performance_reviews/1/performance_review_feedbacks/999", params: { content: "test_content" }
+      expect(response.status).to be == 404
     end
   end
 

@@ -30,10 +30,16 @@ const server = setupServer(
   rest.post(
     `${API_DOMAIN}/employees/1/performance_reviews/1/performance_review_feedbacks`,
     (req, res, ctx) => {
-      const { reviewer_id } = req.body as { reviewer_id: string; }
+      const { reviewer_id } = req.body as { reviewer_id: number; }
       if (!reviewer_id)
         return res(
           ctx.status(400),
+          ctx.json(null)
+        );
+
+      if (reviewer_id === 999)
+        return res(
+          ctx.status(404),
           ctx.json(null)
         );
 
@@ -74,7 +80,7 @@ test("renders performance review number", async () => {
   expect(getByText(/Review #1/i)).toBeInTheDocument();
 });
 
-test("renders new performance review on add click", async () => {
+test("renders new performance review feedback on add click", async () => {
   const { getByText, getByLabelText, getAllByRole } = render(
     <Router initialEntries={["/admin/employees/1/performance_reviews/1"]}>
       <Switch>
@@ -92,5 +98,26 @@ test("renders new performance review on add click", async () => {
   await wait(() => {
     const listItems = getAllByRole("listitem");
     expect(listItems).toHaveLength(2);
+  });
+});
+
+test("doesn't render new performance review feedback on failed request", async () => {
+  const { getByText, getByLabelText, getAllByRole } = render(
+    <Router initialEntries={["/admin/employees/1/performance_reviews/1"]}>
+      <Switch>
+        <Route path="/admin/employees/:employeeId/performance_reviews/:reviewId">
+          <AdminEmployeeReviewDetail />
+        </Route>
+      </Switch>
+    </Router>
+  );
+
+  await waitForElementToBeRemoved(() => getByText(/loading/i));
+  await userEvent.type(getByLabelText(/reviewer/i), '999')
+  expect(getByLabelText(/reviewer/i)).toHaveValue(999)
+  await userEvent.click(getByText(/add/i));
+  await wait(() => {
+    const listItems = getAllByRole("listitem");
+    expect(listItems).not.toHaveLength(2);
   });
 });

@@ -7,6 +7,7 @@ const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
 interface IPerformanceReviewFeedback {
   id: number;
   content: string;
+  employeeId: number;
 }
 
 interface IPerformanceReview {
@@ -31,7 +32,8 @@ export function AdminEmployeeReviewDetail() {
         return response.json();
       })
       .then((data) => {
-        const performanceReview: IPerformanceReview = camelcaseKeys(data);
+        const performanceReview: IPerformanceReview = camelcaseKeys(data, {deep: true});
+        console.log(performanceReview)
         if (!cancelled.current) {
           setPerformanceReview(performanceReview);
         }
@@ -46,15 +48,16 @@ export function AdminEmployeeReviewDetail() {
   const handleAdd = () => {
     const url = `${API_DOMAIN}/employees/${employeeId}/performance_reviews/${reviewId}/performance_review_feedbacks`;
     const data = {
-      reviewer_id: reviewId
-    }
+      reviewer_id: reviewerId,
+    };
+    console.log(data);
     const options: RequestInit = {
       method: "POST",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     };
     fetch(url, options)
       .then((response) => {
@@ -75,7 +78,7 @@ export function AdminEmployeeReviewDetail() {
               performanceReviewFeedback,
             ],
           });
-          setReviewerId(null)
+          setReviewerId(null);
         }
       })
       .catch((e) => console.log(e));
@@ -98,20 +101,23 @@ export function AdminEmployeeReviewDetail() {
           type="number"
           value={reviewerId || ""}
           onChange={(event) => {
-            const reviewerId = Number(event.target.value)
-            setReviewerId(reviewerId)
+            const reviewerId = Number(event.target.value);
+            setReviewerId(reviewerId);
           }}
         ></input>
         <button onClick={handleAdd}>Add</button>
       </form>
       <ul>
-        {performanceReviewFeedbacks.map(({ id: feedbackId, content }) => {
-          return (
-            <li key={feedbackId}>
-              {feedbackId} - {content}
-            </li>
-          );
-        })}
+        {performanceReviewFeedbacks.map(
+          ({ id: feedbackId, content, employeeId: reviewerId }) => {
+            return (
+              <li key={feedbackId}>
+                {feedbackId} -{" "}
+                {content || `pending feedback from employee #${reviewerId}`}
+              </li>
+            );
+          }
+        )}
       </ul>
     </div>
   );
