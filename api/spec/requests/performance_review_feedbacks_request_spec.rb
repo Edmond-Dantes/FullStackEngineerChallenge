@@ -9,7 +9,10 @@ RSpec.describe "PerformanceReviewFeedbacks", type: :request do
       expected = {
           id: 1,
           content: nil,
-          employee_id: 2
+          employee_id: 2,
+          performance_review_id: 1,
+          reviewee_id: 1,
+          pending_feedback: true
         }.to_json
 
       post "/employees/1/performance_reviews/1/performance_review_feedbacks", params: { reviewer_id: 2 }
@@ -40,7 +43,10 @@ RSpec.describe "PerformanceReviewFeedbacks", type: :request do
       expected = {
           id: 1,
           content: "test_content",
-          employee_id: 2
+          employee_id: 2,
+          performance_review_id: 1,
+          reviewee_id: 1,
+          pending_feedback: false
         }.to_json
 
       patch "/employees/1/performance_reviews/1/performance_review_feedbacks/1", params: { content: "test_content" }

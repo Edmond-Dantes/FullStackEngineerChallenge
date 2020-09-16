@@ -33,7 +33,6 @@ export function AdminEmployeeReviewDetail() {
       })
       .then((data) => {
         const performanceReview: IPerformanceReview = camelcaseKeys(data, {deep: true});
-        console.log(performanceReview)
         if (!cancelled.current) {
           setPerformanceReview(performanceReview);
         }
@@ -50,7 +49,6 @@ export function AdminEmployeeReviewDetail() {
     const data = {
       reviewer_id: reviewerId,
     };
-    console.log(data);
     const options: RequestInit = {
       method: "POST",
       mode: "cors",
