@@ -21,6 +21,25 @@ class PerformanceReviewFeedbacksController < ApplicationController
     end
   end
 
+  def show
+    if performance_review =
+      PerformanceReview
+        .find_by(id: performance_review_id, employee_id: employee_id)
+      
+      if performance_review_feedback =
+        performance_review
+          .performance_review_feedbacks
+          .find_by(id: performance_review_feedback_id)
+
+        render json: performance_review_feedback, include: '**'
+      else
+        render json: nil, status: :not_found
+      end
+    else
+      render json: nil, status: :bad_request
+    end
+  end
+
   def update
     if performance_review =
       PerformanceReview
