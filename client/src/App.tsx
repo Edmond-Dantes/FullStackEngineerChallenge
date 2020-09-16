@@ -1,6 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Home, AdminHome, AdminEmployeeDetail } from "./pages"
+import {
+  Home,
+  AdminHome,
+  AdminEmployeeDetail,
+  AdminEmployeeReviewDetail,
+} from "./pages";
 
 function App() {
   return (
@@ -12,6 +17,9 @@ function App() {
           </Route>
           <Route exact path="/admin">
             <AdminHome />
+          </Route>
+          <Route path="/admin/employees/:employeeId/performance_reviews/:reviewId">
+            <AdminEmployeeReviewDetail />
           </Route>
           <Route path="/admin/employees/:employeeId">
             <AdminEmployeeDetail />

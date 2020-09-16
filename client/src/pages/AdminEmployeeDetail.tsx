@@ -60,7 +60,7 @@ export function AdminEmployeeDetail() {
         return response.json();
       })
       .then(() => {
-        if (!cancelled.current) history.push("/admin");
+        history.push("/admin");
       })
       .catch((e) => console.log(e));
   };
@@ -108,10 +108,15 @@ export function AdminEmployeeDetail() {
       <ul>
         {performanceReviews.map(
           ({ id: reviewId, performanceReviewFeedbacks }) => {
-            const feedbackCount = performanceReviewFeedbacks?.length || 0
+            const feedbackCount = performanceReviewFeedbacks?.length || 0;
             return (
               <li key={reviewId}>
-                {reviewId} - {feedbackCount}
+                <Link
+                  to={`/admin/employees/${employeeId}/performance_reviews/${reviewId}`}
+                >
+                  {reviewId}
+                </Link>{" "}
+                - {feedbackCount}
               </li>
             );
           }
