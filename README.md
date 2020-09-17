@@ -47,6 +47,8 @@ npm install
 npm start
 ```
 
+Then open http://localhost:3000/ to see the app.
+
 ## Testing
 
 ### Run API server tests
