@@ -1,38 +1,69 @@
-# Full Stack Developer Challenge
-This is an interview challengs. Please feel free to fork. Pull Requests will be ignored.
+# Take-home Coding Challenge Submission
+This is a partial solution to the [coding challenge](./docs/challenge-spec.md)
 
-## Requirements
-Design a web application that allows employees to submit feedback toward each other's performance review.
+## High level description of design
+This web application allows employees to submit feedback toward each other's performance review. There are two main entry points of hte web app, an employee and an admin home.
 
-*Partial solutions are acceptable.*  It is not necessary to submit a complete solution that implements every requirement.
+### Page routes
+- Employee
+  - / *(entry)*
+  - /performance_review/:revieweeId/:reviewId/:feedbackId
+- Admin
+  - /admin *(entry)*
+  - /admin/employees/:employeeId
+  - /admin/employees/:employeeId/performance_reviews/:reviewId
 
-### Admin view
-* Add/remove/update/view employees
-* Add/update/view performance reviews
-* Assign employees to participate in another employee's performance review
+## Technologies used
 
-### Employee view
-* List of performance reviews requiring feedback
-* Submit feedback
+### Server side API
+- Ruby on Rails API
+- SQLite
 
-## Challenge Scope
-* High level description of design and technologies used
-* Server side API (using a programming language and/or framework of your choice)
-  * Implementation of at least 3 API calls
-  * Most full stack web developers at PayPay currently use Java, Ruby on Rails, or Node.js on the server(with MySQL for the database), but feel free to use other tech if you prefer
-* Web app
-  * Implementation of 2-5 web pages using a modern web framework (e.g. React or Angular) that talks to server side
-    * This should integrate with your API, but it's fine to use static responses for some of it 
-* Document all assumptions made
-* Complete solutions aren't required, but what you do submit needs to run.
+### Web app
+- React (Create React App with Typescript)
 
-## How to complete this challenge
-* Fork this repo in github
-* Complete the design and code as defined to the best of your abilities
-* Place notes in your code to help with clarity where appropriate. Make it readable enough to present to the PayPay interview team
-* Complete your work in your own github repo and send the results to us and/or present them during your interview
+## Assumptions made
+Given limited requirements, this app attempts to meet the minimum requirements, but here are the assumptions made that affect the design and architecture of the app.
 
-## What are we looking for? What does this prove?
-* Assumptions you make given limited requirements
-* Technology and design choices
-* Identify areas of your strengths
+- Employees can be referred to by database record id acting as an employee number.
+- Only employees participate (give performance feedback) in reviews, not an admin.
+- Employees can only submit feedback once for each admin assignment.
+
+## Quick start
+
+### Run API server
+
+*api/ directory*
+```
+bundle install
+rails s -p 5000
+```
+
+### Run React app
+
+*client/ directory*
+```
+npm install
+npm start
+```
+
+Then open http://localhost:3000/ to see the app.
+
+## Testing
+
+### Run API server tests
+
+*api/ directory*
+```
+rspec
+```
+
+### Run React app tests
+
+*api/ directory*
+```
+npm test
+```
+
+## Additional documentation
+docs/ directory
