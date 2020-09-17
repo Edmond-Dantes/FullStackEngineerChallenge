@@ -13,5 +13,5 @@
 *Feedback from an employee toward a performance review. Considered pending when content* 
 - id: integer
 - performance_review_id: integer
-- employee_id: integer
+- employee_id: integer *(reviewer's employee id)*
 - content: text
