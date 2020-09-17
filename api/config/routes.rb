@@ -11,7 +11,6 @@ Rails.application.routes.draw do
     # performance review resource routes
     post '/:employee_id/performance_reviews', to: 'performance_reviews#create'
     get '/:employee_id/performance_reviews/:performance_review_id', to: 'performance_reviews#show'
-    patch '/:employee_id/performance_reviews/:performance_review_id', to: 'performance_reviews#update'
 
     # performance review feedback resource routes
     post '/:employee_id/performance_reviews/:performance_review_id/performance_review_feedbacks', to: 'performance_review_feedbacks#create'

@@ -21,25 +21,33 @@ interface IEmployee {
 export function Home() {
   const { employeeId } = useContext(LoginContext);
   const cancelled = useRef(false);
+  const [error, setError] = useState<string | null>(null);
   const [employee, setEmployee] = useState<IEmployee | null>(null);
   useEffect(() => {
     cancelled.current = false;
     const url = `${API_DOMAIN}/employees/${employeeId}`;
     fetch(url)
       .then((response) => {
-        if (response.status >= 400) throw new Error("error");
+        if (response.status === 404) throw new Error("Employee not found...");
+
+        if (response.status >= 400) throw new Error("Something went wrong...");
+
         return response.json();
       })
       .then((data) => {
         const employee = camelcaseKeys(data, { deep: true });
         if (!cancelled.current) setEmployee(employee);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        setError(e.message)
+      });
 
     return () => {
       cancelled.current = true;
     };
   }, [employeeId]);
+  
+  if (error) return <div>{error}</div>
 
   if (!employee) return <div>loading...</div>;
 

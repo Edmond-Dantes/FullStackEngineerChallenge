@@ -29,6 +29,55 @@ RSpec.describe "PerformanceReviewFeedbacks", type: :request do
     end
   end
 
+  describe "GET /employees/:employee_id/performance_reviews/:performance_reviews_id/performance_review_feedbacks/:performance_review_feedback_id" do
+    it "returns pending performance review feedback data" do
+      employee1 = Employee.create
+      employee2 = Employee.create
+      performance_review = PerformanceReview.create(employee_id: employee1.id)
+      performance_review_feedback =
+        PerformanceReviewFeedback
+          .create(
+            employee_id: employee2.id,
+            performance_review_id: performance_review.id,
+          )
+      expected = {
+          id: 1,
+          content: nil,
+          employee_id: 2,
+          performance_review_id: 1,
+          reviewee_id: 1,
+          pending_feedback: true
+        }.to_json
+
+      get "/employees/1/performance_reviews/1/performance_review_feedbacks/1"
+      expect(response.body).to be == expected
+    end
+
+    it "returns completed performance review feedback data" do
+      employee1 = Employee.create
+      employee2 = Employee.create
+      performance_review = PerformanceReview.create(employee_id: employee1.id)
+      performance_review_feedback =
+        PerformanceReviewFeedback
+          .create(
+            employee_id: employee2.id,
+            performance_review_id: performance_review.id,
+            content: "test_content",
+          )
+      expected = {
+          id: 1,
+          content: "test_content",
+          employee_id: 2,
+          performance_review_id: 1,
+          reviewee_id: 1,
+          pending_feedback: false
+        }.to_json
+
+      get "/employees/1/performance_reviews/1/performance_review_feedbacks/1"
+      expect(response.body).to be == expected
+    end
+  end
+
   describe "PATCH /employees/:employee_id/performance_reviews/:performance_reviews_id/performance_review_feedbacks/:performance_review_feedback_id" do
     it "returns updated performance review feedback data" do
       employee1 = Employee.create
