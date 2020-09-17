@@ -4,7 +4,7 @@ This is a web application that allows employees to submit feedback toward each o
 ### Data
 - employees
 - reviews
-- feedback
+- feedbacks
 
 ### Pages
 #### Admin View
@@ -22,8 +22,7 @@ This is a web application that allows employees to submit feedback toward each o
 ## Tech Stack
 ### Server side API
 - Ruby on Rails API
-- SQLite (database tentative)
-- Authentication TBD
+- SQLite
 
 ### Web app
 - React (Create React App with Typescript)
