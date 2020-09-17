@@ -9,7 +9,6 @@ import { rest } from "msw";
 import { setupServer } from "msw/node";
 import { MemoryRouter as Router, Switch, Route } from "react-router-dom";
 import { AdminEmployeeReviewDetail } from "../AdminEmployeeReviewDetail";
-import { debug } from "console";
 
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
 
