@@ -11,12 +11,6 @@ class PerformanceReviewsController < ApplicationController
     end
   end
 
-  def update
-    # TODO:
-    # move responsibility to a performance_review_feedbacks controller
-    #   considering a performance review feedback's content is the only update-able field
-  end
-
   def show
     if employee = Employee.find_by(id: employee_id)
       if performance_review =

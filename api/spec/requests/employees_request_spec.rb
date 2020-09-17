@@ -7,7 +7,8 @@ RSpec.describe "Employees", type: :request do
       expected = [
         {
           id: 1,
-          performance_reviews: []    
+          performance_reviews: [],
+          performance_review_feedbacks: []
         }
       ].to_json
 
@@ -20,7 +21,8 @@ RSpec.describe "Employees", type: :request do
     it "returns new employee data" do
       expected = {
           id: 1,
-          performance_reviews: []    
+          performance_reviews: [],
+          performance_review_feedbacks: []    
         }.to_json
 
       post "/employees"
@@ -33,7 +35,8 @@ RSpec.describe "Employees", type: :request do
       Employee.create
       expected = {
           id: 1,
-          performance_reviews: []    
+          performance_reviews: [],
+          performance_review_feedbacks: []   
         }.to_json
 
       get "/employees/1"

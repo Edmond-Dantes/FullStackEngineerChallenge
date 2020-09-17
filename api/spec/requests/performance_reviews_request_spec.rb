@@ -15,7 +15,7 @@ RSpec.describe "PerformanceReviews", type: :request do
   end
 
   describe "GET /employees/:employee_id/performance_reviews/:performance_review_id" do
-    it "returns new performance review data" do
+    it "returns performance review data" do
       employee = Employee.create
       PerformanceReview.create(employee_id: employee.id)
       expected = {
