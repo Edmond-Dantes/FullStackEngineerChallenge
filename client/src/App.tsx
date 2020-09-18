@@ -64,6 +64,7 @@ const EmployeeRoute: React.FC<RouteProps> = (props) => {
       }}
     >
       <input
+        placeholder="Enter employee id"
         value={loginValue}
         onChange={(event) => {
           const value = event.target.value;
