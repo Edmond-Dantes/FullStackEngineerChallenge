@@ -2,7 +2,7 @@
 This is a partial solution to the [coding challenge](./docs/challenge-spec.md)
 
 ## High level description of design
-This web application allows employees to submit feedback toward each other's performance review. There are two main entry points of hte web app, an employee and an admin home.
+This web application allows employees to submit feedback toward each other's performance review. There are two main entry points of the web app, an employee and an admin home.
 
 ### Page routes
 - Employee
@@ -36,6 +36,7 @@ Given limited requirements, this app attempts to meet the minimum requirements, 
 *api/ directory*
 ```
 bundle install
+rails db:migrate RAILS_ENV=development
 rails s -p 5000
 ```
 
